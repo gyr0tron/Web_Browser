@@ -6,14 +6,14 @@ from PyQt5.QtPrintSupport import *
 
 import os
 import sys
-
+import requests
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.resize(1280, 720)
         self.browser = QWebEngineView()
-        self.browser.setUrl(QUrl("http://google.com"))
+        self.browser.setUrl(QUrl("http://ndtv.com"))
 
         self.browser.urlChanged.connect(self.update_urlbar)
         self.browser.loadFinished.connect(self.update_title)
@@ -137,6 +137,16 @@ class MainWindow(QMainWindow):
 
         self.urlbar.setText(q.toString())
         print("URL: " + q.toString())
+
+        API_ENDPOINT = "http://localhost:5000/login"
+        data = {'nm':q.toString}
+ 
+        # sending post request and saving response as response object
+        r = requests.post(url = API_ENDPOINT, data = data)
+        
+        # extracting response text 
+        res = r.text
+        print("The response is: " + res)
         self.urlbar.setCursorPosition(0)
 
 
