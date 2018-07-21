@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 
 API_ENDPOINT = "http://localhost:5000/login"
-data = {'nm':"http://www.ndtv.com"}
+# data = {'nm':"http://www.ndtv.com"}
 
 # sending post request and saving response as response object
 # r = requests.post(url = API_ENDPOINT, data = data)
@@ -17,8 +17,9 @@ data = {'nm':"http://www.ndtv.com"}
 #     print(resp.status)
 #     print(await resp.text())
 
-async def fetch():
+async def fetch(data):
   async with aiohttp.request('post', 'http://localhost:5000/login', data = data) as resp:
+        print('--------------------Posted----------------------')
         assert resp.status == 200
         print(await resp.text())
 

@@ -7,6 +7,15 @@ from PyQt5.QtPrintSupport import *
 import os
 import sys
 import requests
+import test
+import json
+
+import requests
+import asyncio
+import aiohttp
+
+from threading import Timer
+good_content = True
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -125,6 +134,7 @@ class MainWindow(QMainWindow):
 
         self.browser.setUrl(q)
 
+
     def update_urlbar(self, q):
 
         if q.scheme() == 'https':
@@ -136,19 +146,60 @@ class MainWindow(QMainWindow):
             self.httpsicon.setPixmap(QPixmap(os.path.join('images', 'lock-nossl.png')))
 
         self.urlbar.setText(q.toString())
-        print("URL: " + q.toString())
 
+        print("URL: " + q.toString())
+        address = q.toString()
         API_ENDPOINT = "http://localhost:5000/login"
-        data = {'nm':q.toString}
- 
+        data = {'nm': address}
+        print('---------------------------')
+        print(data)
+        print('---------------------------------')
+
         # sending post request and saving response as response object
-        r = requests.post(url = API_ENDPOINT, data = data)
-        
-        # extracting response text 
+        r = requests.post(url=API_ENDPOINT, data=data)
+
+        # extracting response text
         res = r.text
-        print("The response is: " + res)
+        res = res.replace('&#39;', '"')
+        d = json.loads(res)
+        # print("The response is: " + str(d['Adult']))
+        adult_predicted = d['Adult']
+        adult_threshold = 0.30
+        if (adult_predicted > adult_threshold):
+            print("----------------------------")
+            print("Adult Content!")
+            good_content = False
+            print("----------------------------")
+        else:
+            print("----------------------------")
+            print("Good Content!")
+            good_content = True
+            print("----------------------------")
+        if(good_content):
+            print("load finished")
+            self.browser.setHtml('<p>Goodcontent</p>')
+            print("now stopping")
+            # self.urlbar.setText('NULL')
+            self.browser.stop
+            # self.browser.stop()
         self.urlbar.setCursorPosition(0)
 
+    # def _loadFinished(self, result):
+        # if(good_content):
+            # print("load finished")
+            # self.browser.setContent('<p>Goodcontent</p>')
+        # s = Timer(5.0, print(output))
+        # output = test.fetch(data)
+        # t = Timer(5.0, print (output))
+        # t.start()
+        # test.fetch(data)
+        # test.fetch(data)
+
+    # async def fetch(data):
+    #     async with aiohttp.request('post', 'http://localhost:5000/login', data = data) as resp:
+    #         print('--------------------Posted----------------------')
+    #         assert resp.status == 200
+    #         print(await resp.text())
 
 app = QApplication(sys.argv)
 app.setApplicationName("Gyro")
