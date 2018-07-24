@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
 
     def update_title(self):
         title = self.browser.page().title()
-        self.setWindowTitle("%s - Gyro" % title)
+        self.setWindowTitle("%s - Gyrotron" % title)
 
         q = self.browser.url()
         print("URL: " + q.toString())
