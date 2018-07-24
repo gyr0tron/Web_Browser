@@ -132,6 +132,7 @@ class MainWindow(QMainWindow):
         else:
             print("load finished")
             print("Adult Content!")
+            
             self.browser.hide()
             print("now stopping")
             # self.urlbar.setText(q.toString())
