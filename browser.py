@@ -189,7 +189,7 @@ class MainWindow(QMainWindow):
             self.httpsicon.setPixmap(QPixmap(os.path.join('images', 'lock-nossl.png')))
 
         self.urlbar.setText(q.toString())
-
+        self.browser.hide()
         
         self.urlbar.setCursorPosition(0)
 
