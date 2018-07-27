@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
         d = json.loads(res)
         # print("The response is: " + str(d['Adult']))
         adult_predicted = d['Adult']
-        adult_threshold = 0.30
+        adult_threshold = 0.20
         if (adult_predicted > adult_threshold):
             print("----------------------------")
             print("Adult Content!")
