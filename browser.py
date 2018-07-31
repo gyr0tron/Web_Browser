@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtPrintSupport import *
+from PyQt5.QtNetwork import QNetworkAccessManager
+from abpy import Filter
 
 import os
 import sys
@@ -13,16 +15,21 @@ import json
 import requests
 import asyncio
 import aiohttp
+import urllib
+from bs4 import BeautifulSoup
 
 from threading import Timer
 good_content = True
+# adblocker = Filter(open('easylist.txt', encoding="utf8"))
+with open("easylist.txt", encoding="utf8") as f:
+    ABPFilter = Filter(f)
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.resize(1280, 720)
         self.browser = QWebEngineView()
-        self.browser.setUrl(QUrl("http://ndtv.com"))
+        self.browser.setUrl(QUrl("https://blockads.fivefilters.org/?pihole"))
 
         self.browser.urlChanged.connect(self.update_urlbar)
         self.browser.loadFinished.connect(self.update_title)
@@ -92,11 +99,34 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+
     def update_title(self):
         title = self.browser.page().title()
         self.setWindowTitle("%s - Gyrotron" % title)
 
         q = self.browser.url()
+        url = q.toString()
+
+# Experiment Start
+
+        response = urllib.request.build_opener()
+        response.addheaders = [('User-agent', 'Mozilla/5.0')]
+        response = urllib.request.urlopen(url)
+        html = response.read().decode('utf-8')
+
+        # soup = BeautifulSoup(html)
+        # pretty = soup.prettify('latin-1')
+        # print(pretty)
+
+        doFilter = ABPFilter.match(html)
+        # doFilter = adblockFilter.match(url)
+        if doFilter:
+            print ("ADS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        else:
+            print ("No ADs")
+
+# Experiment end
+
         print("URL: " + q.toString())
         address = q.toString()
         API_ENDPOINT = "http://localhost:5000/login"
