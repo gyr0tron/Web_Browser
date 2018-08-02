@@ -47,6 +47,9 @@ class Rule(object):
         if self.matched_elements == []:
             self.matched_elements = TYPE_OPT_IDS
 
+    def __repr__(self):
+            return "<Rule: %s>" % (self.rule_str)
+
     def get_tokens(self):
         return RE_TOK.split(self.pattern)
 
@@ -85,17 +88,27 @@ class Filter(object):
                     if tok not in self.index:
                         self.index[tok] = []
                     self.index[tok].append(rule)
-
+        
     def match(self, url, elementtype=None):
+        ad_found = False
+        no_of_ads = 0
         tokens = RE_TOK.split(url)
+        token_cpy = tokens
         # print (tokens)
         for tok in tokens:
             if len(tok) > 2:
                 if tok in self.index:
                     for rule in self.index[tok]:
                         if rule.match(url, elementtype=elementtype):
-                            print(str(rule))
-                            return True
+                            print(repr(rule))
+                            ad_found = True
+                            no_of_ads += 1
+                            # print ()
+                        # else:
+                            # print (url)
+                            # final_tok = final_tok + tok
+                    # return (token_cpy)
+        return ad_found, no_of_ads
 
 
 if __name__ == '__main__':

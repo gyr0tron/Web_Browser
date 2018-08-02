@@ -118,10 +118,11 @@ class MainWindow(QMainWindow):
         # pretty = soup.prettify('latin-1')
         # print(pretty)
 
-        doFilter = ABPFilter.match(html)
+        doFilter, no_ads = ABPFilter.match(html)
         # doFilter = adblockFilter.match(url)
         if doFilter:
             print ("ADS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print (no_ads)
         else:
             print ("No ADs")
 
@@ -131,7 +132,7 @@ class MainWindow(QMainWindow):
         address = q.toString()
         API_ENDPOINT = "http://localhost:5000/login"
         data = {'nm': address}
-        print('---------------------------')
+        print('---------------------------------')
         print(data)
         print('---------------------------------')
 
@@ -164,10 +165,6 @@ class MainWindow(QMainWindow):
             print("Adult Content!")
             self.browser.hide()
             print("now stopping")
-            # self.urlbar.setText(q.toString())
-            # self.urlbar.setText('NULL')
-            # self.browser.stop
-            # self.browser.stop()
 
 
     def open_file(self):
